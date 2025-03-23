@@ -1,0 +1,10 @@
+/secrets/*
+!/secrets/secrets.template.yaml
+
+
+/esphome/
+/.esphome/
+
+/venv/
+/.venv/
+
