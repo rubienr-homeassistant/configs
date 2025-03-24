@@ -2,9 +2,8 @@
 !/secrets/secrets.template.yaml
 
 
-/esphome/
-/.esphome/
+/**/esphome/
+/**/.esphome/
 
 /venv/
 /.venv/
-
