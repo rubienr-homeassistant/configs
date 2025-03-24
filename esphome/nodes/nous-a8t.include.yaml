@@ -1,11 +1,3 @@
-substitutions:
-  device_id: "01"
-  name: nous-a8t-${device_id}
-  friendly_name: Nous A8T (${device_id})
-  max_power: "2000"
-  current_res: "0.00126" # higher value gives lower watt readout
-  voltage_div: "1570"    # lower value gives lower voltage readout
-
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}

@@ -1,9 +1,10 @@
 /secrets/*
 !/secrets/secrets.template.yaml
 
-
 /**/esphome/
 /**/.esphome/
+/**/.gitignore
 
 /venv/
 /.venv/
+
