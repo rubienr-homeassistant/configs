@@ -2,7 +2,7 @@ substitutions:
   name: nous-a8t-xx
 
 esphome:  
-  name: ${name}
+  name: ${name} # will announce via mDNS as ${name}.local
   platformio_options:
     board_build.flash_mode: dio
     
@@ -15,17 +15,17 @@ esp32:
 
 wifi:  
   manual_ip:  
-    static_ip: 192.168.2.28
-    gateway: 192.168.2.1
-    subnet: 255.255.255.0  
-    dns1: 192.168.2.5
+    static_ip: 192.168.0.101
+    gateway:   192.168.0.1
+    subnet:    255.255.255.0
+    dns1:      192.168.0.1
   id: wifiId
-  ssid: IoT
+  ssid: "Mc Muck Free Wifi"
   password: nocnwinniepoop
   ap: {}
 
 ota:  
-  unprotected_writes: True # This is mandatory if you want to flash the partition table or bootloader!     
+  unprotected_writes: True # Mandatory if you want to flash the partition table or bootloader!
 
 logger:
 web_server:
