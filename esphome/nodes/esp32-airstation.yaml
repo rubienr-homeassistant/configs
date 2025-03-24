@@ -1,32 +1,35 @@
 substitutions:
-  name: air_livingroom
+  sensor_id: "01"
+  name: air-livingroom-${sensor_id}
+  friendly_name: "Livingroom Air Sensor (${sensor_id})"
 
 esphome:
   name: ${name}
-  friendly_name: "Livingroom Air Sensor"
+  friendly_name: Air Station (${friendly_name})
 
 esp32:
   board: esp32dev
   framework:
     type: esp-idf
 
-# Enable logging
+# enable logging
 logger:
 
-# Enable Home Assistant API
+# enable Home Assistant API
 api:
   encryption:
     key: !secret api_key
 
+# allow Over-The-Air updates
 ota:
   platform: esphome
-  password: !secret ota_key
+  password: !secret ota_password
 
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
 
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  # enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: ${name}
     password: !secret wifi_ap_password
