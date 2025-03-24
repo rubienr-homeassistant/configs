@@ -58,6 +58,8 @@ time:
   - platform: homeassistant
     id: homeassistant_time
 
+esp32_ble_tracker:
+
 globals:
   - id: total_energy
     type: float
