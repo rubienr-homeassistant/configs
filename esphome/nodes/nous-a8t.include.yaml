@@ -75,14 +75,14 @@ light:
 
 binary_sensor:
   - platform: gpio
-    id: "push_button"
+    id: push_button
     internal: true
     pin:
       number: GPIO04
       inverted: yes
       mode: INPUT_PULLUP
     on_press:
-      - switch.toggle: "relay"
+      - switch.toggle: relay
 
 switch:
   - platform: gpio
