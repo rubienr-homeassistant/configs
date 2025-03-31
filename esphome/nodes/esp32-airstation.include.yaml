@@ -1,11 +1,6 @@
-substitutions:
-  sensor_id: "01"
-  name: air-livingroom-${sensor_id}
-  friendly_name: "Livingroom Air Sensor (${sensor_id})"
-
 esphome:
   name: ${name}
-  friendly_name: Air Station (${friendly_name})
+  friendly_name: ${friendly_name}
 
 esp32:
   board: esp32dev
