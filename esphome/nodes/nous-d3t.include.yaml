@@ -80,24 +80,42 @@ switch:
     icon: mdi:power
     turn_on_action:
       - script.execute: toggle_relay
+      - lambda: |-
+          id(manually_turned_on_s) = millis() / 1000;
     turn_off_action:
       - script.execute: toggle_relay
+      - lambda: |-
+          id(manually_turned_on_s) = 0;
     lambda: |-
       return id(relay_toggle_state);
       
-#  - platform: template
-#    name: "Reboot Device"
-#    turn_on_action:
-#      - script.execute: reboot_device
-     
+  # exposes the relais switch to homeassistant
+  - platform: template
+    name: "Automation Relay (internal)"
+    id: relay_control_internal
+    optimistic: true
+    restore_mode: DISABLED # required, otherwise initialization will trigger turn_on_action or turn_off_action
+    icon: mdi:power
+    turn_on_action:
+      - script.execute: toggle_relay
+      - lambda: |-
+          id(manually_turned_on_s) = 0;
+    turn_off_action:
+      - script.execute: toggle_relay
+      - lambda: |-
+          id(manually_turned_on_s) = 0;
+    lambda: |-
+      return id(relay_toggle_state);
+
 binary_sensor: # senses the momentary push-button; not exposed to homeassistant
   - platform: gpio
     pin: GPIO0
     id: sensor_toggle
     name: "Button"
     on_press:
-      - logger.log: "on press button"
       - script.execute: toggle_relay
+      - lambda: |-
+          id(manually_turned_on_s) = id(relay_toggle_state) ? millis() / 1000 : 0;
 
 globals:
   # bi-stable relay state: off (false), on (true)
@@ -105,6 +123,10 @@ globals:
     type: bool
     restore_value: true
     initial_value: 'false'
+
+  - id: manually_turned_on_s
+    type: unsigned int
+    initial_value: '0'
 
 script:
   - id: update_relay_led
@@ -133,11 +155,6 @@ script:
       - delay: 300ms
       - output.turn_off: relay_on_coil
       - output.turn_off: relay_off_coil
-  - id: reboot_device
-    mode: single
-    then:
-      - lambda: |-
-          ESP.restart(); 
       
 uart:
   id: uart_bl0942
@@ -147,11 +164,16 @@ uart:
   stop_bits: 1
 
 sensor:
-#  - platform: template
-#    name: "Relay Toggle State"
-#    lambda: |-
-#      return id(relay_toggle_state);
-#    update_interval: 1s
+  - platform: template
+    id: manually_turned_on_since_s
+    unit_of_measurement: "s"
+    accuracy_decimals: 0
+    icon: mdi:timer-outline
+    name: "Manually On"
+    lambda: |-
+      return (float)id(manually_turned_on_s) ? millis() / 1000 - id(manually_turned_on_s) : 0;
+    update_interval: 1s
+
   - platform: bl0942
     uart_id: uart_bl0942
     reset: true
