@@ -134,9 +134,9 @@ script:
     then:
       - lambda: |-
           if (id(relay_toggle_state))
-            id(led_relay).turn_off();
-          else
             id(led_relay).turn_on();
+          else
+            id(led_relay).turn_off();
    # bi-stable relais abstraction
   - id: toggle_relay
     mode: single
