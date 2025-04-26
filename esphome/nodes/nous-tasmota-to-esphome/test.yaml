@@ -1,20 +1,20 @@
 substitutions:
   name: nous-a8t-xx
 
-esphome:  
+esphome:
   name: ${name} # will announce via mDNS as ${name}.local
   platformio_options:
     board_build.flash_mode: dio
-    
+
 esp32:
-  board: esp32doit-devkit-v1  
-  framework:  
-    type: esp-idf  
-    platform_version: 6.4.0  
+  board: esp32doit-devkit-v1
+  framework:
+    type: esp-idf
+    platform_version: 6.4.0
     version: 5.1.1
 
-wifi:  
-  manual_ip:  
+wifi:
+  manual_ip:
     static_ip: 192.168.0.101
     gateway:   192.168.0.1
     subnet:    255.255.255.0
@@ -24,7 +24,7 @@ wifi:
   password: nocnwinniepoop
   ap: {}
 
-ota:  
+ota:
   unprotected_writes: True # Mandatory if you want to flash the partition table or bootloader!
 
 logger:

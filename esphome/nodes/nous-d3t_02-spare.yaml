@@ -1,0 +1,6 @@
+substitutions:
+  device_id: "02"
+  name: nous-d3t-${device_id}
+  friendly_name: "Spare (${device_id})"
+
+<<: !include nous-d3t.include.yaml
