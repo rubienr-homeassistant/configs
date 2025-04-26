@@ -82,6 +82,10 @@ sensor:
     loop_time:
       name: "Loop Time"
 
+  - platform: internal_temperature
+    name: "MCU Temperature"
+    update_interval: 5s
+
   - platform: bmp280_i2c
     temperature:
       name: "Temperature (BMP280)"
@@ -99,7 +103,7 @@ sensor:
       name: "Humidity (AHT20)"
     update_interval: 5s
     address: 0x38
-    
+
   - platform: senseair
     co2:
       name: "CO2"
