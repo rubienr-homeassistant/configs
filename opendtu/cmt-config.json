@@ -1,0 +1,13 @@
+[
+    {
+        "name": "CMT only",
+        "cmt": {
+            "sdio": 23,
+            "clk": 18,
+            "fcs": 5,
+            "gpio2": 17,
+            "gpio3": 16,
+            "cs": 4
+        }
+    }
+]
