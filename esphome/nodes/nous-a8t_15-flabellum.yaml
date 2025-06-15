@@ -1,7 +1,7 @@
 substitutions:
   device_id: "15"
-  name: nous-a8t-${device_id}-spare
-  friendly_name: "spare (${device_id})"
+  name: nous-a8t-${device_id}-flabellum
+  friendly_name: "Flabellum (${device_id})"
   max_power: "2000"
   current_res: "0.00126" # higher value gives lower watt readout
   voltage_div: "1570"    # lower value gives lower voltage readout
