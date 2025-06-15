@@ -99,9 +99,9 @@ time:
 #     "BASE": 1
 # }
 
-esp32_ble_tracker:
+# esp32_ble_tracker:
 
-bluetooth_proxy:
+# bluetooth_proxy:
 
 output:
   - platform: ledc
@@ -361,7 +361,7 @@ sensor:
         # some power meters will report this in negative values (probably wired backwards)
         - multiply: -1.0
     energy:
-      name: "Total Energy"
+      name: "Energy"
     frequency:
       name: "Frequency"
     update_interval: 5s
