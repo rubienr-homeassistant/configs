@@ -1,0 +1,6 @@
+substitutions:
+  device_id: "04"
+  name: esp32-airsensor-${device_id}
+  friendly_name: "Spare Air Station (${device_id})"
+
+<<: !include esp32-airstation.include.yaml
