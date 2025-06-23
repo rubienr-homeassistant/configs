@@ -3,4 +3,8 @@ substitutions:
   name: nous-d3t-${device_id}
   friendly_name: "Spare (${device_id})"
 
+# esp32_ble_tracker:
+# bluetooth_proxy:
+web_server:
+
 <<: !include nous-d3t.include.yaml

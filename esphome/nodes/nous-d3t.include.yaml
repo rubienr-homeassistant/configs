@@ -99,10 +99,6 @@ time:
 #     "BASE": 1
 # }
 
-# esp32_ble_tracker:
-
-# bluetooth_proxy:
-
 output:
   - platform: ledc
     pin: GPIO5

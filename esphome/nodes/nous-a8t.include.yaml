@@ -44,10 +44,6 @@ time:
   - platform: homeassistant
     id: homeassistant_time
 
-# esp32_ble_tracker:
-
-# bluetooth_proxy:
-
 globals:
   - id: total_energy
     type: float
@@ -57,8 +53,6 @@ globals:
 dashboard_import:
   package_import_url: github://esphome/example-configs/esphome-web/esp32.yaml@main
   import_full_config: true
-
-web_server: # to have a "next url" for improv serial
 
 light:
   - platform: status_led

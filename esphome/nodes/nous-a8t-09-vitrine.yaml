@@ -6,4 +6,8 @@ substitutions:
   current_res: "0.00126" # higher value gives lower watt readout
   voltage_div: "1570"    # lower value gives lower voltage readout
 
+# esp32_ble_tracker:
+# bluetooth_proxy:
+web_server:
+
 <<: !include nous-a8t.include.yaml
