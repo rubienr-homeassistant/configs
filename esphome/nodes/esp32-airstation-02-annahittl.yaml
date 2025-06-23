@@ -1,6 +1,10 @@
 substitutions:
   device_id: "02"
-  name: esp32-airsensor-${device_id}
+  name: esp32-airstation-${device_id}
   friendly_name: "Annahittl Air Sensor (${device_id})"
+
+# esp32_ble_tracker:
+# bluetooth_proxy:
+web_server:
 
 <<: !include esp32-airstation.include.yaml

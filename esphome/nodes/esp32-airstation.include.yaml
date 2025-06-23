@@ -35,10 +35,6 @@ time:
   - platform: homeassistant
     id: homeassistant_time
 
-esp32_ble_tracker:
-
-bluetooth_proxy:
-
 debug:
   update_interval: 5s
 
@@ -114,9 +110,47 @@ sensor:
     type: PMSX003
     pm_1_0:
       name: "ppm <1.0µm"
+      id: pm10
     pm_2_5:
       name: "ppm <2.5µm"
+      id: pm25
     pm_10_0:
       name: "ppm <10.0µm"
+      id: pm100
     update_interval: 60s
     uart_id: huart2
+
+  - platform: template
+    id: mpsx_2_5_10
+    unit_of_measurement: "µg/m³"
+    accuracy_decimals: 2
+    icon: mdi:chemical-weapon
+    name: "ppm 2.5-10µm"
+    lambda: |-
+      return id(pm100).state - id(pm25).state;
+    update_interval: 60s
+
+  - platform: template
+    id: mpsx_1_0_2
+    unit_of_measurement: "µg/m³"
+    accuracy_decimals: 2
+    icon: mdi:chemical-weapon
+    name: "ppm 1.0-2.5µm"
+    lambda: |-
+      return id(pm25).state - id(pm10).state;
+    update_interval: 60s
+
+light:
+  - platform: binary
+    name: "Light"
+    output: user_led
+  - platform: esp32_rmt_led_strip
+    rgb_order: GRB
+    pin: GPIO23
+    num_leds: 2
+    chipset: ws2812
+    name: "My Light"
+output:
+  - platform: gpio
+    pin: GPIO02
+    id: user_led
