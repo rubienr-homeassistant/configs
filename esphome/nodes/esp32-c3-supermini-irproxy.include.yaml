@@ -1,0 +1,101 @@
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+# enable logging
+logger:
+
+# enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+# allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${name}
+    password: !secret wifi_ap_password
+
+captive_portal:
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+debug:
+  update_interval: 5s
+
+sensor:
+  - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
+    name: "WiFi Signal [dB]"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: wifi_signal_db
+    name: "WiFi Signal [%]"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "Signal %"
+    entity_category: "diagnostic"
+    device_class: ""
+
+  - platform: debug
+    free:
+      name: "Heap Free"
+    block:
+      name: "Heap Max Block"
+    loop_time:
+      name: "Loop Time"
+
+  - platform: internal_temperature
+    name: "MCU Temperature"
+    update_interval: 5s
+
+light:
+  - platform: binary
+    name: "Light"
+    output: user_led
+output:
+  - platform: gpio
+    pin: GPIO08
+    id: user_led
+    inverted: true
+
+infrared:
+  - platform: ir_rf_proxy
+    name: IR Proxy Transmitter
+    id: ir_proxy_tx
+    remote_transmitter_id: ir_tx
+
+  - platform: ir_rf_proxy
+    name: IR Proxy Receiver
+    id: ir_proxy_rx
+    receiver_frequency: 38kHz
+    remote_receiver_id: ir_rx
+
+# save non-strapping pins: GPIO0, GPIO1, GPIO3, GPIO10
+
+remote_receiver:
+  id: ir_rx
+  pin: GPIO1
+  dump: all
+
+remote_transmitter:
+  id: ir_tx
+  pin: GPIO0
+  carrier_duty_percent: 50%

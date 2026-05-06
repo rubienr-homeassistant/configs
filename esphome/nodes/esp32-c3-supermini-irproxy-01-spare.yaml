@@ -1,0 +1,8 @@
+substitutions:
+  device_id: "01"
+  name: esp32-c3-supermini-irproxy-${device_id}
+  friendly_name: "IR/RF Proxy (${device_id})"
+
+web_server:
+
+<<: !include esp32-c3-supermini-irproxy.include.yaml
