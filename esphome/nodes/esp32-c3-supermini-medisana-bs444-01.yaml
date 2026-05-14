@@ -1,0 +1,8 @@
+substitutions:
+  device_id: "01"
+  name: esp32-c3-supermini-medisana-${device_id}
+  friendly_name: "Medisana Body Scale${device_id})"
+
+web_server:
+
+<<: !include esp32-c3-supermini-medisana-bs444.include.yaml

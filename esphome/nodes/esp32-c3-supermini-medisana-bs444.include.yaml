@@ -1,0 +1,159 @@
+substitutions:
+  my_name: !secret my_name
+  my_boss_name: !secret my_boss_name
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+# enable logging
+logger:
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+# enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+# allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${name}
+    password: !secret wifi_ap_password
+
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 1100ms
+    window: 1100ms
+    active: false
+
+bluetooth_proxy:
+
+captive_portal:
+
+debug:
+  update_interval: 5s
+
+# ----- body scale
+# https://github.com/michaelmell/medisana-bs-444-esphome
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/bwynants/weegschaal
+      ref: main
+    components: [ medisana_bs444 ]
+
+ble_client:
+  - mac_address: !secret medisana_bs444_mac
+    id: medisababs44_ble_id
+
+medisana_bs444:
+  - id: myscale
+    ble_client_id: medisababs44_ble_id
+    timeoffset: true
+
+sensor:
+  - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
+    name: "WiFi Signal [dB]"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: wifi_signal_db
+    name: "WiFi Signal [%]"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "Signal %"
+    entity_category: "diagnostic"
+    device_class: ""
+
+  - platform: debug
+    free:
+      name: "Heap Free"
+    block:
+      name: "Heap Max Block"
+    loop_time:
+      name: "Loop Time"
+
+  - platform: internal_temperature
+    name: "MCU Temperature"
+    update_interval: 5s
+
+  - platform: medisana_bs444
+    medisana_bs444_id: myscale
+    weight_1:
+      name: "Weight ${my_name}"
+    kcal_1:
+      name: "kcal ${my_name}"
+    fat_1:
+      name: "Fat ${my_name}"
+    tbw_1:
+      name: "Water ${my_name}"
+    muscle_1:
+      name: "Muscle ${my_name}"
+    bone_1:
+      name: "Bone ${my_name}"
+    bmi_1:
+      name: "BMI ${my_name}"
+
+    weight_2:
+      name: "Weight ${my_boss_name}"
+    kcal_2:
+      name: "kcal ${my_boss_name}"
+    fat_2:
+      name: "Fat ${my_boss_name}"
+    tbw_2:
+      name: "Water ${my_boss_name}"
+    muscle_2:
+      name: "Muscle ${my_boss_name}"
+    bone_2:
+      name: "Bone ${my_boss_name}"
+    bmi_2:
+      name: "BMI ${my_boss_name}"
+
+    weight_3:
+      name: "Weight Guest"
+    kcal_3:
+      name: "kcal Guest"
+    fat_3:
+      name: "Fat Guest"
+    tbw_3:
+      name: "Water Guest"
+    muscle_3:
+      name: "Muscle Guest"
+    bone_3:
+      name: "Bone Guest"
+    bmi_3:
+      name: "BMI Guest"
+
+light:
+  - platform: binary
+    name: "Light"
+    output: user_led
+
+output:
+  - platform: gpio
+    pin: GPIO08
+    id: user_led
+    inverted: true
+
+# save non-strapping pins: GPIO0, GPIO1, GPIO3, GPIO10
+
