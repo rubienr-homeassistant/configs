@@ -7,4 +7,4 @@ substitutions:
 # bluetooth_proxy:
 web_server:
 
-<<: !include esp32-sprinkler.include.yaml
+<<: !include esp32-wroom-32d-sprinkler.include.yaml
