@@ -1,0 +1,10 @@
+substitutions:
+  device_id: "01"
+  name: esp32-sprinkler-${device_id}
+  friendly_name: "Sprinkler (${device_id})"
+
+# esp32_ble_tracker:
+# bluetooth_proxy:
+web_server:
+
+<<: !include esp32-s3-sprinkler.include.yaml
