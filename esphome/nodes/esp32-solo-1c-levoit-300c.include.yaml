@@ -1,0 +1,203 @@
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+  platformio_options:
+    build_flags: -DBOARD_HAS_PSRAM
+    board_build.arduino.memory_type: qio_opi
+    board_build.f_flash: 80000000L
+    board_build.flash_mode: qio
+
+esp32:
+  # Chip type:          ESP32-S0WD (revision v1.1)
+  # Features:           Wi-Fi, BT, Single Core + LP Core, Vref calibration in eFuse, Coding Scheme None
+  # Crystal frequency:  40MHz
+  board: esp32dev
+  framework:
+    type: esp-idf
+    sdkconfig_options:
+      CONFIG_FREERTOS_UNICORE: y
+
+# enable logging
+logger:
+
+# enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+# allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${name}
+    password: !secret wifi_ap_password
+
+captive_portal:
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+debug:
+  update_interval: 5s
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/tuct/esphome-projects
+      ref: main
+    components: [levoit]
+
+uart:
+  - id: uart_mcu2esp
+    tx_pin: GPIO17
+    rx_pin: GPIO16
+    baud_rate: 115200
+
+levoit:
+  id: levoitcore300
+  model: CORE300S
+
+fan:
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Fan"
+    id: levoit_fan1
+
+switch:
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Display"
+    type: display
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Child Lock"
+    type: child_lock
+
+number:
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Auto Mode Room Size"
+    type: efficiency_room_size
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Timer (min)"
+    type: timer
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Filter Months"
+    type: filter_lifetime_months
+
+sensor:
+  - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
+    name: "WiFi Signal [dB]"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: wifi_signal_db
+    name: "WiFi Signal [%]"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "Signal %"
+    entity_category: "diagnostic"
+    device_class: ""
+
+  - platform: debug
+    free:
+      name: "Heap Free"
+    block:
+      name: "Heap Max Block"
+    loop_time:
+      name: "Loop Time"
+
+  - platform: uptime
+    name: Uptime
+
+  - platform: internal_temperature
+    name: "MCU Temperature"
+    update_interval: 5s
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "PM 2.5"
+    type: pm25
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Air Quality Index"
+    type: aqi
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Current CADR"
+    type: current_cadr
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Filter %"
+    type: filter_life_left
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "RPM"
+    type: fan_rpm
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Timer Remaining"
+    type: timer_current
+
+select:
+  - platform: levoit
+    levoit: levoitcore300
+    type: auto_mode
+    name: "Auto Mode"
+
+text_sensor:
+  - platform: levoit
+    levoit: levoitcore300
+    name: "MCU Version"
+    type: mcu_version
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "ESP Version"
+    type: esp_version
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Timer Duration"
+    type: timer_duration_initial
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Timer Remaining"
+    type: timer_duration_remaining
+
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Error"
+    type: error_message
+
+button:
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Filter Reset"
+    type: reset_filter_stats
+
+binary_sensor:
+  - platform: levoit
+    levoit: levoitcore300
+    name: "Filter Low"
+    type: filter_low

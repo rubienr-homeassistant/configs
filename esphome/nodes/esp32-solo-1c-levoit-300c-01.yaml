@@ -1,0 +1,8 @@
+substitutions:
+  device_id: "01"
+  name: levoit-airfilter-${device_id}
+  friendly_name: "Levoit Air Filter (${device_id})"
+
+web_server:
+
+<<: !include esp32-solo-1c-levoit-300c.include.yaml
